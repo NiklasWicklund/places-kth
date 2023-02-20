@@ -1,0 +1,70 @@
+[
+    {
+       "building":"H-huset",
+       "short":"H-huset"
+    },
+    {
+       "building":"Byggteknik & Design",
+       "short":"W-huset"
+    },
+    {
+       "building":"F-huset",
+       "short":"F-huset"
+    },
+    {
+       "building":"Maskin",
+       "short":"Maskin"
+    },
+    {
+       "building":"Fysikcentrum",
+       "short":"AlbaNova"
+    },
+    {
+       "building":"Väg och vatten",
+       "short":"V-huset"
+    },
+    {
+       "building":"E-huset huvudbyggnaden",
+       "short":"E-huset"
+    },
+    {
+       "building":"D-huset huvudbyggnaden",
+       "short":"D-huset"
+    },
+    {
+       "building":"Undervisningshuset",
+       "short":"U-huset"
+    },
+    {
+       "building":"Flyget",
+       "short":"Flyget"
+    },
+    {
+       "building":"Q-huset",
+       "short":"Q-huset"
+    },
+    {
+       "building":"Bergs",
+       "short":"Bergs"
+    },
+    {
+       "building":"Sing-Sing",
+       "short":"Sing-Sing"
+    },
+    {
+       "building":"KTH Biblioteket",
+       "short":"KTH Biblioteket"
+    },
+    {
+       "building":"Kemi",
+       "short":"K-huset"
+    },
+    {
+       "building":"Ringen-huset",
+       "short":"Ringen-huset"
+    },
+    {
+       "building":"Lantmäteri",
+       "short":"L-huset"
+    }
+ ]
