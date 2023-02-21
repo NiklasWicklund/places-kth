@@ -8,6 +8,15 @@
     background-color: white;
   }
 
+.clusterIcon {
+  background-color: lightblue;
+  opacity: 50%;
+  color: black;
+  border-radius: 50%;
+  border-width: 2px;
+  border: #FFFFFF;
+}
+
 
 .mapMarker {
   background-color: red;

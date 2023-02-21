@@ -2,10 +2,10 @@ import { promises as fs } from 'fs';
 import roomData from './rooms-campus.json'
 
 export default async function handler(req, res) {
-    let { building,date, startTime, endTime } = req.query;
+    const {date} = req.query;
 
-    startTime = '07:00:00'
-    endTime = '21:00:00'
+    const startTime = '07:00:00'
+    const endTime = '21:00:00'
     const startDateTime = new Date(`${date}T${startTime}`);
     const endDateTime = new Date(`${date}T${endTime}`);
     if (isNaN(startDateTime) || isNaN(endDateTime) || startDateTime >= endDateTime) {

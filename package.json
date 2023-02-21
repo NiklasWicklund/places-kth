@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.9",
@@ -18,9 +19,13 @@
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
     "leaflet": "^1.9.3",
-    "next": "13.1.1",
-    "react": "18.2.0",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "react-leaflet": "^4.2.0"
+    "react-leaflet": "^4.2.0",
+    "react-leaflet-markercluster": "^3.0.0-rc1"
+  },
+  "peerDependencies": {
+    "leaflet.markercluster": "^1.5.3"
   }
 }

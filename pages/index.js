@@ -4,9 +4,10 @@ import styles from '../styles/Explore.module.css'
 import Room from '../components/Room';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,FormControlLabel,Checkbox} from '@mui/material';
+import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,ListItemButton,ListItem,FormControlLabel,Checkbox, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText} from '@mui/material';
 import Loading from '../components/Loading';
 import Map from '../components/Map';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 function Home() {
 
@@ -20,8 +21,9 @@ function Home() {
   const [fetchingBuildings,setFetchingBuildings] = useState(false);
   const [buildings,setBuildings] = useState([]);
   const [specificTime,setSpecificTime] = useState(false);
-
   const [selectedRoom,setSelectedRoom] = useState(null);
+
+  const [searchQuery,setSearchQuery] = useState('');
 
   useEffect(() => {
     setRooms([])
@@ -29,10 +31,7 @@ function Home() {
     async function fetchData() {
       const response = await axios.get('../api/rooms', {
         params: {
-          building: selectedBuildings.join(','),
-          date: selectedDate,
-          startTime: selectedStartTime,
-          endTime: selectedEndTime,
+          date: selectedDate
         },
       });
       setFetchingRooms(false);
@@ -65,9 +64,14 @@ function Home() {
       });
     }
     
-    
+    if(searchQuery.length > 0){
+      result = result.filter((room) => 
+        room.name.includes(searchQuery)
+        || room.building.includes(searchQuery))
+    }
+    result = result.sort((r1,r2) => r1.building > r2.building)
     setFilteredRooms(result);
-  },[rooms,selectedBuildings,selectedStartTime,selectedEndTime,specificTime])
+  },[rooms,selectedBuildings,selectedStartTime,selectedEndTime,specificTime,searchQuery])
 
 
 
@@ -93,7 +97,7 @@ function Home() {
     <div className={styles.main}>
 
     {fetchingBuildings ? <Loading /> :
-      <Container maxWidth="md">
+      <Container >
       <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
@@ -128,7 +132,7 @@ function Home() {
             />
           </Grid>
           
-          <Grid item xs={2}>
+          <Grid item xs={12} sm = {2}>
             <InputLabel id="specificTime-label">Specific time</InputLabel>
             <Checkbox
               checked={specificTime}
@@ -137,7 +141,7 @@ function Home() {
             />
             
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs = {12} sm={5}>
               <TextField
                 fullWidth
                 disabled={!specificTime}
@@ -148,7 +152,7 @@ function Home() {
                 onChange={(event) => setSelectedStartTime(event.target.value)}
               />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs = {12} sm={5}>
               <TextField
                 fullWidth
                 disabled={!specificTime}
@@ -159,20 +163,52 @@ function Home() {
                 onChange={(event) => setSelectedEndTime(event.target.value)}
               />
           </Grid>
+          <Grid item xs = {12}>
+            <TextField 
+              fullWidth
+              label="Search rooms"
+              variant='outlined'
+              value={searchQuery}
+              onChange = {(e) => setSearchQuery(e.target.value)}
+            />
+          </Grid>
           
         </Grid>
-        <Typography variant="subtitle1" color="textSecondary">
-          {filteredRooms.length} available rooms
-        </Typography>
-          {/*fetchingRooms ? <Loading /> : 
+        <Grid container spacing={3}>
+          <Grid item xs = {12} >
+            <Typography variant="subtitle1" color="textSecondary">
+              Showing {filteredRooms.length} rooms
+            </Typography>
+          </Grid>
+          <Grid item sm = {12} md={8}>
+              {/*fetchingRooms ? <Loading /> : 
+              
+              filteredRooms.map(room => 
+              <Room key = {room.id} room = {room} />
+              )*/}
           
-          filteredRooms.map(room => 
-          <Room key = {room.id} room = {room} />
-          )*/}
-
-      <Map rooms = {filteredRooms} setSelectedRoom={setSelectedRoom}/>
-      {selectedRoom && <Room room={selectedRoom} />}
+          <Map rooms = {filteredRooms} setSelectedRoom={setSelectedRoom}/>
+          {selectedRoom && <Room room={selectedRoom} />}
+          
+          </Grid>
+          <Grid item sm = {12} md={4}>
+            <Paper style={{maxHeight: 500, overflow: 'auto'}}>
+              <List>
+                {filteredRooms.map((room) => (
+                  <ListItemButton selected={room.id == selectedRoom?.id} key={room.id} onClick={() => setSelectedRoom(room)}>
+                    <ListItemText primary={room.name} secondary={room.building + ', Floor ' + room.floor}/>
+                  </ListItemButton>
+                ))}
+              </List>
+            </Paper>
+          
+          </Grid>
+          
+        </Grid>
+        {fetchingRooms && <Loading />}
+        
       </Container>
+      
 
     }
     </div>
