@@ -4,7 +4,7 @@ import roomData from './rooms-campus.json'
 export default async function handler(req, res) {
     const {date} = req.query;
 
-    const startTime = '07:00:00'
+    const startTime = '08:00:00'
     const endTime = '21:00:00'
     const startDateTime = new Date(`${date}T${startTime}`);
     const endDateTime = new Date(`${date}T${endTime}`);
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         booking.locations.forEach(location => {
             const roomId = location.id;
             if (!availableTimeSlots[roomId]) {
-            availableTimeSlots[roomId] = [{start: "07:00:00", end: "21:00:00"}];
+            availableTimeSlots[roomId] = [{start: "08:00:00", end: "21:00:00"}];
             }
         });
         });
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
               room.timeSlots = timeSlots;
             } else {
               // If the room is not in the availableTimeSlots object, assume it's free the whole day
-              room.timeSlots = [{ start: "07:00:00", end: "21:00:00" }];
+              room.timeSlots = [{ start: "08:00:00", end: "21:00:00" }];
             }
         });
 

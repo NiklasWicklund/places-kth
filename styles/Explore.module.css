@@ -17,6 +17,19 @@
   border: #FFFFFF;
 }
 
+.buildingMarker{
+  position: relative;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  width: 100px;
+  height: fit-content;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #999;
+}
+
+
 
 .mapMarker {
   background-color: red;

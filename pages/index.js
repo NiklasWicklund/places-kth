@@ -4,16 +4,17 @@ import styles from '../styles/Explore.module.css'
 import Room from '../components/Room';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,ListItemButton,ListItem,FormControlLabel,Checkbox, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText} from '@mui/material';
+import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,ListItemButton,ListItem,FormControlLabel,Checkbox, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText,ListSubheader, ListItemIcon} from '@mui/material';
 import Loading from '../components/Loading';
 import Map from '../components/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { fontWeight } from '@mui/system';
 
 function Home() {
 
   const [selectedBuildings, setSelectedBuildings] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
-  const [selectedStartTime, setSelectedStartTime] = useState('07:00:00');
+  const [selectedStartTime, setSelectedStartTime] = useState('08:00:00');
   const [selectedEndTime, setSelectedEndTime] = useState('21:00:00');
   const [rooms, setRooms] = useState([]);
   const [filteredRooms,setFilteredRooms] = useState([]);
@@ -22,6 +23,8 @@ function Home() {
   const [buildings,setBuildings] = useState([]);
   const [specificTime,setSpecificTime] = useState(false);
   const [selectedRoom,setSelectedRoom] = useState(null);
+
+  const [roomsByBuilding,setRoomsByBuilding] = useState(null);
 
   const [searchQuery,setSearchQuery] = useState('');
 
@@ -74,6 +77,17 @@ function Home() {
   },[rooms,selectedBuildings,selectedStartTime,selectedEndTime,specificTime,searchQuery])
 
 
+  useEffect(()=>{
+    let res = buildings.map((building) => {
+      const buildingRooms = filteredRooms.filter((room) => room.building === building.building);
+      return {
+        ...building,
+        rooms: buildingRooms
+      };
+    });
+    //res = res.filter((building) => building.rooms.length > 0)
+    setRoomsByBuilding(res);
+  },[filteredRooms,buildings])
 
   useEffect(() => {
     setBuildings([])
@@ -85,6 +99,10 @@ function Home() {
     }
     fetchData();
   }, []);
+
+  const toHourMinute = (date) => {
+    return date.slice(0,5)
+  }
 
 
   return (<>
@@ -187,17 +205,46 @@ function Home() {
               <Room key = {room.id} room = {room} />
               )*/}
           
-          <Map rooms = {filteredRooms} setSelectedRoom={setSelectedRoom}/>
-          {selectedRoom && <Room room={selectedRoom} />}
+          <Map rooms = {filteredRooms} roomsByBuildings={roomsByBuilding} setSelectedRoom={setSelectedRoom} setSelectedBuildings={setSelectedBuildings}/>
           
           </Grid>
           <Grid item sm = {12} md={4}>
             <Paper style={{maxHeight: 500, overflow: 'auto'}}>
               <List>
-                {filteredRooms.map((room) => (
-                  <ListItemButton selected={room.id == selectedRoom?.id} key={room.id} onClick={() => setSelectedRoom(room)}>
-                    <ListItemText primary={room.name} secondary={room.building + ', Floor ' + room.floor}/>
-                  </ListItemButton>
+                {roomsByBuilding?.map((building) => (
+                  <li key={building.short}>
+                    <ul>
+                      <ListSubheader 
+                        key={building.short}
+                        sx={{
+                          fontSize: '1.2rem',
+                          fontWeight: 'bold',
+                          backgroundColor: '#F0F0F0'
+                        }}
+                      >
+                        {`${building.building}`}
+                      </ListSubheader>
+                      {building.rooms.map((room) => (
+                        <ListItemButton key={room.id} onClick={() => window.open('https://www.kth.se/places/room/id/' + room.id,'_blank')}>
+                          <ListItemText 
+                            primary={room.name}
+                            secondary={room.timeSlots.map(slot => (
+                              <Typography 
+                                key = {`${slot.start}-${slot.end}`}
+                                variant="body2" color="textSecondary" component="p"
+                              >
+                                  {`${toHourMinute(slot.start)}-${toHourMinute(slot.end)}`}
+                              </Typography> 
+                            ))}
+                          />
+                          <ListItemSecondaryAction>
+                            <OpenInNewIcon/>
+                          </ListItemSecondaryAction>
+                          
+                        </ListItemButton>
+                      ))}
+                    </ul>
+                  </li>
                 ))}
               </List>
             </Paper>

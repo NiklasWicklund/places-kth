@@ -1,70 +1,104 @@
 [
     {
        "building":"H-huset",
-       "short":"H-huset"
+       "short":"H-huset",
+       "lat":"59.349531",
+       "lng":"18.073018"
     },
     {
        "building":"Byggteknik & Design",
-       "short":"W-huset"
+       "short":"W-huset",
+       "lat":"59.350698",
+       "lng":"18.070479"
     },
     {
        "building":"F-huset",
-       "short":"F-huset"
+       "short":"F-huset",
+       "lat":"59.34837",
+       "lng":"18.074787"
     },
     {
        "building":"Maskin",
-       "short":"Maskin"
+       "short":"Maskin",
+       "lat":"59.353268",
+       "lng":"18.06485"
     },
     {
        "building":"Fysikcentrum",
-       "short":"AlbaNova"
+       "short":"AlbaNova",
+       "lat":"59.35384",
+       "lng":"18.058247"
     },
     {
        "building":"Väg och vatten",
-       "short":"V-huset"
+       "short":"V-huset",
+       "lat":"59.351143",
+       "lng":"18.071363"
     },
     {
        "building":"E-huset huvudbyggnaden",
-       "short":"E-huset"
+       "short":"E-huset",
+       "lat":"59.346992",
+       "lng":"18.072964"
     },
     {
        "building":"D-huset huvudbyggnaden",
-       "short":"D-huset"
+       "short":"D-huset",
+       "lat":"59.346807",
+       "lng":"18.073872"
     },
     {
        "building":"Undervisningshuset",
-       "short":"U-huset"
+       "short":"U-huset",
+       "lat":"59.350902",
+       "lng":"18.070013"
     },
     {
        "building":"Flyget",
-       "short":"Flyget"
+       "short":"Flyget",
+       "lat":"59.348785",
+       "lng":"18.071894"
     },
     {
        "building":"Q-huset",
-       "short":"Q-huset"
+       "short":"Q-huset",
+       "lat":"59.350143",
+       "lng":"18.067043"
     },
     {
        "building":"Bergs",
-       "short":"Bergs"
+       "short":"Bergs",
+       "lat":"59.351594",
+       "lng":"18.068559"
     },
     {
        "building":"Sing-Sing",
-       "short":"Sing-Sing"
+       "short":"Sing-Sing",
+       "lat":"59.348421",
+       "lng":"18.073911"
     },
     {
        "building":"KTH Biblioteket",
-       "short":"KTH Biblioteket"
+       "short":"KTH Biblioteket",
+       "lat":"59.347878",
+       "lng":"18.073089"
     },
     {
        "building":"Kemi",
-       "short":"K-huset"
+       "short":"K-huset",
+       "lat":"59.350127",
+       "lng":"18.074595"
     },
     {
        "building":"Ringen-huset",
-       "short":"Ringen-huset"
+       "short":"Ringen-huset",
+       "lat":"59.34837",
+       "lng":"18.073"
     },
     {
        "building":"Lantmäteri",
-       "short":"L-huset"
+       "short":"L-huset",
+       "lat":"59.349898",
+       "lng":"18.069108"
     }
  ]

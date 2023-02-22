@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup,CircleMarker, Tooltip, Rectangle, Circle } from 'react-leaflet';
 import { Typography } from '@mui/material';
 import {renderToStaticMarkup} from 'react-dom/server'
 import 'leaflet/dist/leaflet.css';
@@ -8,7 +8,8 @@ import Leaflet from 'leaflet'
 import styles from '../../styles/Explore.module.css'
 import { MarkerCluster } from './MarkerCluster';
 
-function Map({ rooms,setSelectedRoom }) {
+
+function Map({ rooms,roomsByBuildings,setSelectedRoom,setSelectedBuildings }) {
   const center = [59.35, 18.07]; // coordinates for Stockholm
   const iconHTML = renderToStaticMarkup(<RoomIcon />)
   const customMarkerIcon = new Leaflet.DivIcon({
@@ -26,6 +27,9 @@ function Map({ rooms,setSelectedRoom }) {
     shadowAnchor: [12, 41],
   })
 
+  /**
+   *           
+   */
   return (
     <MapContainer center={center} zoom={15} maxZoom={19} style={{ height: '500px' }}>
       <TileLayer 
@@ -33,26 +37,24 @@ function Map({ rooms,setSelectedRoom }) {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         maxZoom={19}
       />
-      <MarkerCluster>
 
       
-      {rooms.map((room) => (
-        <Marker 
-          key={room.id}
-          position={[room.lat, room.lng]}
-          
+      {roomsByBuildings.map((building) => (
+        <CircleMarker 
+
+          key={building.short}
+          center={[building.lat, building.lng]}
           eventHandlers={{
             click: (e) => {
-              setSelectedRoom(room);  // will print 'FooBar' in console
+              setSelectedRoom(building);  // will print 'FooBar' in console
             },
           }}
         >
-          <Popup>
-            {room.name}
-          </Popup>
-        </Marker>
+          <Tooltip permanent direction="top" offset={[0, 0]}>
+            {building.short} [{building.rooms.length}]
+          </Tooltip>
+        </CircleMarker>
         ))}
-        </MarkerCluster>
     </MapContainer>
   );
 }
