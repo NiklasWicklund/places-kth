@@ -9,7 +9,7 @@ import styles from '../../styles/Explore.module.css'
 import { MarkerCluster } from './MarkerCluster';
 
 
-function Map({ rooms,roomsByBuildings,setSelectedRoom,setSelectedBuildings }) {
+function Map({ rooms,roomsByBuildings }) {
   const center = [59.35, 18.07]; // coordinates for Stockholm
   const iconHTML = renderToStaticMarkup(<RoomIcon />)
   const customMarkerIcon = new Leaflet.DivIcon({
@@ -31,11 +31,12 @@ function Map({ rooms,roomsByBuildings,setSelectedRoom,setSelectedBuildings }) {
    *           
    */
   return (
-    <MapContainer center={center} zoom={15} maxZoom={19} style={{ height: '500px' }}>
+    <MapContainer center={center} zoom={15} minZoom = {15} maxZoom={19} style={{ height: '60vh',width: '100%' }} zoomSnap={0.1}>
       <TileLayer 
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         maxZoom={19}
+        minZoom = {15}
       />
 
       
@@ -45,9 +46,7 @@ function Map({ rooms,roomsByBuildings,setSelectedRoom,setSelectedBuildings }) {
           key={building.short}
           center={[building.lat, building.lng]}
           eventHandlers={{
-            click: (e) => {
-              setSelectedRoom(building);  // will print 'FooBar' in console
-            },
+            
           }}
         >
           <Tooltip permanent direction="top" offset={[0, 0]}>

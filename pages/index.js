@@ -4,30 +4,38 @@ import styles from '../styles/Explore.module.css'
 import Room from '../components/Room';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,ListItemButton,ListItem,FormControlLabel,Checkbox, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText,ListSubheader, ListItemIcon} from '@mui/material';
+import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,ListItemButton,ListItem,FormControlLabel,Checkbox, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText,ListSubheader, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Button} from '@mui/material';
 import Loading from '../components/Loading';
 import Map from '../components/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { fontWeight } from '@mui/system';
-
+import { ExpandMore,Clear } from '@mui/icons-material';
+import Filter from '../components/Filter';
 function Home() {
 
-  const [selectedBuildings, setSelectedBuildings] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
-  const [selectedStartTime, setSelectedStartTime] = useState('08:00:00');
-  const [selectedEndTime, setSelectedEndTime] = useState('21:00:00');
   const [rooms, setRooms] = useState([]);
   const [filteredRooms,setFilteredRooms] = useState([]);
   const [fetchingRooms,setFetchingRooms] = useState(false);
   const [fetchingBuildings,setFetchingBuildings] = useState(false);
   const [buildings,setBuildings] = useState([]);
-  const [specificTime,setSpecificTime] = useState(false);
-  const [selectedRoom,setSelectedRoom] = useState(null);
 
   const [roomsByBuilding,setRoomsByBuilding] = useState(null);
 
-  const [searchQuery,setSearchQuery] = useState('');
+  const [filter,setFilter] = useState({
+    startTime: '08:00:00',
+    endTime: '21:00:00',
+    useTime: false,
+    buildings: [],
+    query: ''
+  })
 
+  const updateFilter = (key,value) => {
+    setFilter(prev => ({
+      ...prev,
+      [key]:value
+    }))
+  }
   useEffect(() => {
     setRooms([])
     setFetchingRooms(true);
@@ -37,6 +45,7 @@ function Home() {
           date: selectedDate
         },
       });
+      
       setFetchingRooms(false);
       setRooms(response.data);
     }
@@ -47,34 +56,34 @@ function Home() {
     let result = []
 
     // Buildings
-    if (selectedBuildings.length == 0){
+    if (filter.buildings.length == 0){
       result = rooms;
       
     }else{
-      result = rooms.filter(room => selectedBuildings.includes(room.building));
+      result = rooms.filter(room => filter.buildings.includes(room.building));
     }
 
 
     //Time
-    if(specificTime){
+    if(filter.useTime){
       result = result.filter((room) => {
         const free = room.timeSlots.filter(
           (timeSlot) =>
-            timeSlot.start <= selectedStartTime &&
-            timeSlot.end >= selectedEndTime
+            timeSlot.start <= filter.startTime &&
+            timeSlot.end >= filter.endTime
         );
         return free.length > 0;
       });
     }
     
-    if(searchQuery.length > 0){
+    if(filter.query.length > 0){
       result = result.filter((room) => 
-        room.name.includes(searchQuery)
-        || room.building.includes(searchQuery))
+        room.name.toLowerCase().includes(filter.query.toLowerCase())
+        || room.building.includes(filter.query.toLowerCase()))
     }
     result = result.sort((r1,r2) => r1.building > r2.building)
     setFilteredRooms(result);
-  },[rooms,selectedBuildings,selectedStartTime,selectedEndTime,specificTime,searchQuery])
+  },[rooms,filter])
 
 
   useEffect(()=>{
@@ -85,7 +94,7 @@ function Home() {
         rooms: buildingRooms
       };
     });
-    //res = res.filter((building) => building.rooms.length > 0)
+    res = res.filter((building) => building.rooms.length > 0)
     setRoomsByBuilding(res);
   },[filteredRooms,buildings])
 
@@ -116,82 +125,7 @@ function Home() {
 
     {fetchingBuildings ? <Loading /> :
       <Container >
-      <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id="building-label">Building</InputLabel>
-              <Select
-                labelId="building-label"
-                id="building"
-                multiple
-                value={selectedBuildings}
-                onChange={(event) => setSelectedBuildings(event.target.value)}
-                renderValue={(selected) => selected.join(', ')}
-              >
-                <MenuItem key="clear-all" onClick={() => setSelectedBuildings([])}>
-                  Clear all
-                </MenuItem>
-                {buildings.map((building) => (
-                  <MenuItem key={building.short} value={building.building}>
-                    {building.building} ({building.short})
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Date"
-              variant="outlined"
-              type="date"
-              value={selectedDate}
-              onChange={(event) => setSelectedDate(event.target.value)}
-            />
-          </Grid>
-          
-          <Grid item xs={12} sm = {2}>
-            <InputLabel id="specificTime-label">Specific time</InputLabel>
-            <Checkbox
-              checked={specificTime}
-              onChange={(event) => setSpecificTime(event.target.checked)}
-              labelId="specificTime-label"
-            />
-            
-          </Grid>
-          <Grid item xs = {12} sm={5}>
-              <TextField
-                fullWidth
-                disabled={!specificTime}
-                label="Start time"
-                variant="outlined"
-                type="time"
-                value={selectedStartTime}
-                onChange={(event) => setSelectedStartTime(event.target.value)}
-              />
-          </Grid>
-          <Grid item xs = {12} sm={5}>
-              <TextField
-                fullWidth
-                disabled={!specificTime}
-                label="End time"
-                variant="outlined"
-                type="time"
-                value={selectedEndTime}
-                onChange={(event) => setSelectedEndTime(event.target.value)}
-              />
-          </Grid>
-          <Grid item xs = {12}>
-            <TextField 
-              fullWidth
-              label="Search rooms"
-              variant='outlined'
-              value={searchQuery}
-              onChange = {(e) => setSearchQuery(e.target.value)}
-            />
-          </Grid>
-          
-        </Grid>
+        <Filter buildings={buildings} updateFilter={updateFilter} filter={filter} setSelectedDate={setSelectedDate} selectedDate = {selectedDate}/>
         <Grid container spacing={3}>
           <Grid item xs = {12} >
             <Typography variant="subtitle1" color="textSecondary">
@@ -199,17 +133,10 @@ function Home() {
             </Typography>
           </Grid>
           <Grid item sm = {12} md={8}>
-              {/*fetchingRooms ? <Loading /> : 
-              
-              filteredRooms.map(room => 
-              <Room key = {room.id} room = {room} />
-              )*/}
-          
-          <Map rooms = {filteredRooms} roomsByBuildings={roomsByBuilding} setSelectedRoom={setSelectedRoom} setSelectedBuildings={setSelectedBuildings}/>
-          
+            <Map rooms = {filteredRooms} roomsByBuildings={roomsByBuilding}/>
           </Grid>
           <Grid item sm = {12} md={4}>
-            <Paper style={{maxHeight: 500, overflow: 'auto'}}>
+            <Paper style={{maxHeight: '60vh', overflow: 'auto'}}>
               <List>
                 {roomsByBuilding?.map((building) => (
                   <li key={building.short}>
@@ -230,7 +157,7 @@ function Home() {
                             primary={room.name}
                             secondary={room.timeSlots.map(slot => (
                               <Typography 
-                                key = {`${slot.start}-${slot.end}`}
+                                key = {`${room.name}${slot.start}-${slot.end}`}
                                 variant="body2" color="textSecondary" component="p"
                               >
                                   {`${toHourMinute(slot.start)}-${toHourMinute(slot.end)}`}

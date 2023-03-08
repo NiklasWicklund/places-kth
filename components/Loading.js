@@ -1,9 +1,9 @@
 import CircularProgress from '@mui/material/CircularProgress';
-
+import styles from '../styles/Explore.module.css'
 const Loading = () => {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'fit-content' }}>
-        <CircularProgress />
+      <div className={styles.loadingOverlay}>
+        <CircularProgress color="primary" size={'6rem'}/>
       </div>
     );
   };
