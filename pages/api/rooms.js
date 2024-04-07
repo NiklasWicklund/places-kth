@@ -13,10 +13,11 @@ export default async function handler(req, res) {
     }
 
 
-    const stringStart = startDateTime.toLocaleString('sv-SE', 'Europe/Stockholm').replace(' ','T');
-    const stringEnd = endDateTime.toLocaleString('sv-SE', 'Europe/Stockholm').replace(' ','T');
+    const stringStart = date + 'T' + startTime;
+    const stringEnd = date + 'T' + endTime;
 
     const apiUrl = `https://api.kth.se/api/timetable/v1/reservations/search?start=${stringStart}&end=${stringEnd}`;
+
     try {
         
         // Make a GET request to the API URL using the `fetch` function
@@ -50,6 +51,7 @@ export default async function handler(req, res) {
             const roomId = location.id;
             const startTime = new Date(booking.start).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
             const endTime = new Date(booking.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
+
             const newTimeSlots = [];
             availableTimeSlots[roomId].forEach(timeSlot => {
             if (timeSlot.end <= startTime || timeSlot.start >= endTime) {
