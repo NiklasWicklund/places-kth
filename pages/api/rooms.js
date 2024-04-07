@@ -1,16 +1,28 @@
 import { promises as fs } from 'fs';
 import roomData from './rooms-campus.json'
+//Import time zone conversion fro date-fns
+import { formatInTimeZone } from 'date-fns-tz';
 
 export default async function handler(req, res) {
     const {date} = req.query;
 
     const startTime = '08:00:00'
     const endTime = '21:00:00'
-    const startDateTime = new Date(`${date}T${startTime}`);
-    const endDateTime = new Date(`${date}T${endTime}`);
-    if (isNaN(startDateTime) || isNaN(endDateTime) || startDateTime >= endDateTime) {
+
+    var unformattedStart = new Date(date + 'T' + '08:00:00')
+    var unformattedEnd = new Date(date + 'T' + '21:00:00')
+
+    
+    if (isNaN(unformattedStart) || isNaN(unformattedEnd) || unformattedStart >= unformattedEnd) {
         return res.status(400).json({ error: 'Invalid date or time parameters' });
     }
+    console.log("Okey")
+    const ISOStart = date + 'T' + '08:00:00'
+    const ISOEnd = date + 'T' + '21:00:00'
+    const startDateTime = new Date(formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
+    const endDateTime = new Date(formatInTimeZone(ISOEnd, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
+    console.log("Start",startDateTime,startDateTime.getTime())
+    console.log("End",endDateTime)
 
 
     const stringStart = date + 'T' + startTime;
@@ -50,8 +62,10 @@ export default async function handler(req, res) {
         data.forEach(booking => {
         booking.locations.forEach(location => {
             const roomId = location.id;
-            const startTime = new Date(booking.start);
-            const endTime = new Date(booking.end);
+            const ISOStart = date + 'T' + booking.start
+            const ISOEnd = date + 'T' + booking.end
+            const startTime = new Date(formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
+            const endTime = new Date(formatInTimeZone(ISOEnd, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
             const newTimeSlots = [];
             availableTimeSlots[roomId].forEach(timeSlot => {
             if (timeSlot.end.getTime() <= startTime.getTime() || timeSlot.start.getTime() >= endTime.getTime()) {

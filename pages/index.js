@@ -9,6 +9,7 @@ import Loading from '../components/Loading';
 import Map from '../components/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Filter from '../components/Filter';
+
 function Home() {
 
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
@@ -36,7 +37,7 @@ function Home() {
   }
   useEffect(() => {
     setRooms([])
-    setFetchingRooms(true);
+    setFetchingRooms(false);
     async function fetchData() {
       const response = await axios.get('../api/rooms', {
         params: {
