@@ -87,7 +87,7 @@ export default async function handler(req, res) {
         });
 
         // Remove rooms if they aren't in the asked for in the api request.
-        return res.status(200).json(roomData);
+        return res.status(200).json(data);
     } catch (error) {
         // Handle errors that occur during the API request or response parsing
         return res.status(500).json({ error: error.message, startDateTime: stringStart,endDateTime: stringEnd });
