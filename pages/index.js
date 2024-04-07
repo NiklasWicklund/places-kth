@@ -4,12 +4,10 @@ import styles from '../styles/Explore.module.css'
 import Room from '../components/Room';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Grid, TextField,FormControl,InputLabel,Select,MenuItem,Typography,ListItemButton,ListItem,FormControlLabel,Checkbox, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText,ListSubheader, ListItemIcon, Accordion, AccordionSummary, AccordionDetails, Button} from '@mui/material';
+import { Container, Grid,Typography,ListItemButton, Paper,List ,ListItemSecondaryAction, IconButton, ListItemText,ListSubheader} from '@mui/material';
 import Loading from '../components/Loading';
 import Map from '../components/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { fontWeight } from '@mui/system';
-import { ExpandMore,Clear } from '@mui/icons-material';
 import Filter from '../components/Filter';
 function Home() {
 
@@ -46,14 +44,15 @@ function Home() {
         },
       });
       console.log("Before")
-      console.log(response.data)
+      const before = response.data
+      console.log(before)
       //Convert all time slots to Date objects to time strings with the user's timezone
-      response.data.forEach(room => {
+      /*response.data.forEach(room => {
         room.timeSlots.forEach(slot => {
           slot.start = new Date(slot.start).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
           slot.end = new Date(slot.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
         });
-      });
+      });*/
       console.log("After")
       console.log(response.data)
       setFetchingRooms(false);
