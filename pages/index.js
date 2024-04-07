@@ -45,8 +45,13 @@ function Home() {
           date: selectedDate
         },
       });
-      
-      console.log(response.data)
+      //Convert all time slots to Date objects to time strings with the user's timezone
+      response.data.forEach(room => {
+        room.timeSlots.forEach(slot => {
+          slot.start = new Date(slot.start).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
+          slot.end = new Date(slot.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
+        });
+      });
       setFetchingRooms(false);
       setRooms(response.data);
     }

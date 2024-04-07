@@ -40,29 +40,29 @@ export default async function handler(req, res) {
         booking.locations.forEach(location => {
             const roomId = location.id;
             if (!availableTimeSlots[roomId]) {
-            availableTimeSlots[roomId] = [{start: "08:00:00", end: "21:00:00"}];
+            availableTimeSlots[roomId] = [{start: startDateTime, end: endDateTime}];
             }
         });
         });
         
+        //toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
         // Remove booked time slots from the available time slots object
         data.forEach(booking => {
         booking.locations.forEach(location => {
             const roomId = location.id;
-            const startTime = new Date(booking.start).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
-            const endTime = new Date(booking.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
-
+            const startTime = new Date(booking.start);
+            const endTime = new Date(booking.end);
             const newTimeSlots = [];
             availableTimeSlots[roomId].forEach(timeSlot => {
-            if (timeSlot.end <= startTime || timeSlot.start >= endTime) {
+            if (timeSlot.end.getTime() <= startTime.getTime() || timeSlot.start.getTime() >= endTime.getTime()) {
                 // Time slot is available, add it to the new array
                 newTimeSlots.push(timeSlot);
             } else {
                 // Time slot overlaps with booking, split it into two or three parts
-                if (timeSlot.start < startTime) {
+                if (timeSlot.start.getTime() < startTime.getTime()) {
                 newTimeSlots.push({start: timeSlot.start, end: startTime});
                 }
-                if (timeSlot.end > endTime) {
+                if (timeSlot.end.getTime() > endTime.getTime()) {
                 newTimeSlots.push({start: endTime, end: timeSlot.end});
                 }
             }
@@ -77,17 +77,16 @@ export default async function handler(req, res) {
         roomData.forEach(room => {
             const roomId = room.id;
             const timeSlots = availableTimeSlots[roomId];
-            
             if (timeSlots) {
               room.timeSlots = timeSlots;
             } else {
               // If the room is not in the availableTimeSlots object, assume it's free the whole day
-              room.timeSlots = [{ start: "08:00:00", end: "21:00:00" }];
+              room.timeSlots = [{ start: startDateTime, end: endDateTime }];
             }
         });
 
         // Remove rooms if they aren't in the asked for in the api request.
-        return res.status(200).json(data);
+        return res.status(200).json(roomData);
     } catch (error) {
         // Handle errors that occur during the API request or response parsing
         return res.status(500).json({ error: error.message, startDateTime: stringStart,endDateTime: stringEnd });
