@@ -45,6 +45,8 @@ function Home() {
           date: selectedDate
         },
       });
+      console.log("Before")
+      console.log(response.data)
       //Convert all time slots to Date objects to time strings with the user's timezone
       response.data.forEach(room => {
         room.timeSlots.forEach(slot => {
@@ -52,6 +54,8 @@ function Home() {
           slot.end = new Date(slot.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
         });
       });
+      console.log("After")
+      console.log(response.data)
       setFetchingRooms(false);
       setRooms(response.data);
     }
