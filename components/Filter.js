@@ -73,62 +73,6 @@ const Filter = (props) => {
               onChange={(event) => props.updateFilter('endTime',event.target.value)}
             />
         </Grid>
-        <Grid item xs = {12}>
-            <Accordion expanded={expandFilter} onChange={(e) => setExpandFilter(prev => !prev)}>
-                <AccordionSummary
-                  expandIcon={<ExpandMore/>}
-                >
-                  <Typography>
-                    Advanced filtering
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={3}>
-                  <Grid item xs = {12} sm={6}>
-                      <TextField
-                        fullWidth
-                        disabled={!props.filter.useTime}
-                        label="Start time"
-                        ampm={false}
-                        variant="outlined"
-                        type="time"
-                        value={props.filter.startTime}
-                        onChange={(event) => props.updateFilter('startTime',event.target.value)}
-                      />
-                  </Grid>
-                  <Grid item xs = {12} sm={6}>
-                      <TextField
-                        fullWidth
-                        disabled={!props.filter.useTime}
-                        label="End time"
-                        ampm={false}
-                        variant="outlined"
-                        type="time"
-                        value={props.filter.endTime}
-                        onChange={(event) => props.updateFilter('endTime',event.target.value)}
-                      />
-                  </Grid>
-                  <Grid item xs = {12}>
-                    <Typography align='center'>
-                      <Button variant='contained' startIcon={<Clear />} color='warning'>
-                        Clear
-                      </Button>
-                    </Typography>
-                    
-                  </Grid>
-                  </Grid>
-                </AccordionDetails>
-            </Accordion>
-        </Grid>
-        <Grid item xs = {12}>
-          <TextField 
-            fullWidth
-            label="Search rooms"
-            variant='outlined'
-            value={props.filter.query}
-            onChange = {(e) => props.updateFilter('query',e.target.value)}
-          />
-        </Grid>
         
       </Grid>
     );

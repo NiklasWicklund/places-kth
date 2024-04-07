@@ -18,7 +18,8 @@ export default async function handler(req, res) {
     const stringStart = startDateTime.toLocaleString('sv-SE', { timeZone }).replace(' ','T');
     const stringEnd = endDateTime.toLocaleString('sv-SE', { timeZone }).replace(' ','T');
 
-    const apiUrl = `http://www.kth.se/api/timetable/v1/reservations/search?start=${stringStart}&end=${stringEnd}`;
+    const apiUrl = `https://api.kth.se/api/timetable/v1/reservations/search?start=${stringStart}&end=${stringEnd}`;
+    console.log(apiUrl);
     try {
         
         // Make a GET request to the API URL using the `fetch` function
@@ -45,7 +46,7 @@ export default async function handler(req, res) {
             }
         });
         });
-
+        
         // Remove booked time slots from the available time slots object
         data.forEach(booking => {
         booking.locations.forEach(location => {
