@@ -12,14 +12,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid date or time parameters' });
     }
 
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    
 
-    const stringStart = startDateTime.toLocaleString('sv-SE', { timeZone }).replace(' ','T');
-    const stringEnd = endDateTime.toLocaleString('sv-SE', { timeZone }).replace(' ','T');
+    const stringStart = startDateTime.toLocaleString('sv-SE', 'Europe/Stockholm').replace(' ','T');
+    const stringEnd = endDateTime.toLocaleString('sv-SE', 'Europe/Stockholm').replace(' ','T');
 
     const apiUrl = `https://api.kth.se/api/timetable/v1/reservations/search?start=${stringStart}&end=${stringEnd}`;
-    console.log(apiUrl);
     try {
         
         // Make a GET request to the API URL using the `fetch` function
