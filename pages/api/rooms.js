@@ -1,8 +1,6 @@
 import { promises as fs } from 'fs';
 import roomData from './rooms-campus.json'
 //Import time zone conversion fro date-fns
-import { formatInTimeZone,toDate } from 'date-fns-tz';
-import { Iso } from '@mui/icons-material';
 
 export default async function handler(req, res) {
     const { DateTime } = require("luxon");
@@ -21,22 +19,9 @@ export default async function handler(req, res) {
 
     const ISOStart = date + 'T' + '08:00:00'
     const ISOEnd = date + 'T' + '21:00:00'
-    const timestampWithTimeZone =  + ' Europe/Stockholm';
-    
-    // Parse the timestamp with Luxon and convert it to a JavaScript Date object
-    const swedishDate = DateTime.fromISO(ISOStart, { zone: "Europe/Stockholm" }).toJSDate();
-    console.log("Using Luxon: ",swedishDate)
 
-    const utc = new Date(ISOStart);
-    const test = toDate(utc, { timeZone: 'Europe/Stockholm' })
-    console.log("Using toDate: ",test)
-
-    const temp_test = formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T')
-    const temp_test_date = new Date(temp_test)
-    const startDateTime = new Date(formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
-    const endDateTime = new Date(formatInTimeZone(ISOEnd, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
-    console.log(temp_test)
-    console.log(temp_test_date)
+    const startDateTime = DateTime.fromISO(ISOStart, { zone: "Europe/Stockholm" }).toJSDate();
+    const endDateTime = DateTime.fromISO(ISOEnd, { zone: "Europe/Stockholm" }).toJSDate();
 
 
     const stringStart = date + 'T' + startTime;
@@ -76,10 +61,13 @@ export default async function handler(req, res) {
         data.forEach(booking => {
         booking.locations.forEach(location => {
             const roomId = location.id;
-            const ISOStart = date + 'T' + booking.start
-            const ISOEnd = date + 'T' + booking.end
-            const startTime = new Date(formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
-            const endTime = new Date(formatInTimeZone(ISOEnd, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
+            const ISOStartB = booking.start
+            const ISOEndB = booking.end
+            const startTime = DateTime.fromISO(ISOStartB, { zone: "Europe/Stockholm" }).toJSDate();
+            const endTime = DateTime.fromISO(ISOEndB, { zone: "Europe/Stockholm" }).toJSDate();
+            console.log("##########")
+            console.log(ISOStartB, ISOEndB)
+            console.log(startTime, endTime)
             const newTimeSlots = [];
             availableTimeSlots[roomId].forEach(timeSlot => {
             if (timeSlot.end.getTime() <= startTime.getTime() || timeSlot.start.getTime() >= endTime.getTime()) {
@@ -112,9 +100,10 @@ export default async function handler(req, res) {
               room.timeSlots = [{ start: startDateTime, end: endDateTime }];
             }
         });
+        //Filter out rooms that have no available time slots
 
         // Remove rooms if they aren't in the asked for in the api request.
-        return res.status(200).json([roomData,swedishDate]);
+        return res.status(200).json(roomData);
     } catch (error) {
         // Handle errors that occur during the API request or response parsing
         return res.status(500).json({ error: error.message, startDateTime: stringStart,endDateTime: stringEnd });

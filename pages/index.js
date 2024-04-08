@@ -44,18 +44,14 @@ function Home() {
           date: selectedDate
         },
       });
-      console.log("Before")
-      const before = response.data
-      console.log(before)
       //Convert all time slots to Date objects to time strings with the user's timezone
-      /*response.data.forEach(room => {
+      response.data.forEach(room => {
         room.timeSlots.forEach(slot => {
-          slot.start = new Date(slot.start).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
-          slot.end = new Date(slot.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm"});
+          //Convert to sv-SE with format HH:mm
+          slot.start = new Date(slot.start).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm", hour: '2-digit', minute: '2-digit'});
+          slot.end = new Date(slot.end).toLocaleTimeString("sv-SE", {timeZone: "Europe/Stockholm", hour: '2-digit', minute: '2-digit'});
         });
-      });*/
-      console.log("After")
-      console.log(response.data)
+      });
       setFetchingRooms(false);
       setRooms(response.data);
     }
@@ -73,7 +69,8 @@ function Home() {
       result = rooms.filter(room => filter.buildings.includes(room.building));
     }
 
-
+    // Rooms have free time
+    result = result.filter((room) => room.timeSlots.length > 0);
     //Time
     if(filter.useTime){
       result = result.filter((room) => {
@@ -92,6 +89,8 @@ function Home() {
         || room.building.includes(filter.query.toLowerCase()))
     }
     result = result.sort((r1,r2) => r1.building > r2.building)
+
+    console.log(result)
     setFilteredRooms(result);
   },[rooms,filter])
 
