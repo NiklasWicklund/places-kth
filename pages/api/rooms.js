@@ -2,8 +2,10 @@ import { promises as fs } from 'fs';
 import roomData from './rooms-campus.json'
 //Import time zone conversion fro date-fns
 import { formatInTimeZone,toDate } from 'date-fns-tz';
+import { Iso } from '@mui/icons-material';
 
 export default async function handler(req, res) {
+    const { DateTime } = require("luxon");
     const {date} = req.query;
 
     const startTime = '08:00:00'
@@ -16,9 +18,14 @@ export default async function handler(req, res) {
     if (isNaN(unformattedStart) || isNaN(unformattedEnd) || unformattedStart >= unformattedEnd) {
         return res.status(400).json({ error: 'Invalid date or time parameters' });
     }
-    console.log("Okey")
+
     const ISOStart = date + 'T' + '08:00:00'
     const ISOEnd = date + 'T' + '21:00:00'
+    const timestampWithTimeZone =  + ' Europe/Stockholm';
+    
+    // Parse the timestamp with Luxon and convert it to a JavaScript Date object
+    const swedishDate = DateTime.fromISO(ISOStart, { zone: "Europe/Stockholm" }).toJSDate();
+    console.log("Using Luxon: ",swedishDate)
 
     const utc = new Date(ISOStart);
     const test = toDate(utc, { timeZone: 'Europe/Stockholm' })
@@ -107,7 +114,7 @@ export default async function handler(req, res) {
         });
 
         // Remove rooms if they aren't in the asked for in the api request.
-        return res.status(200).json([roomData,test]);
+        return res.status(200).json([roomData,swedishDate]);
     } catch (error) {
         // Handle errors that occur during the API request or response parsing
         return res.status(500).json({ error: error.message, startDateTime: stringStart,endDateTime: stringEnd });
