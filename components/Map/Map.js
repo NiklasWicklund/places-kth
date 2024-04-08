@@ -31,7 +31,7 @@ function Map({ rooms,roomsByBuildings }) {
    *           
    */
   return (
-    <MapContainer center={center} zoom={15} minZoom = {15} maxZoom={19} style={{ height: '60vh',width: '100%' }} zoomSnap={0.1}>
+    <MapContainer center={center} zoom={15} minZoom = {15} maxZoom={19} style={{ height: '50vh',width: '100%' }} zoomSnap={0.1}>
       <TileLayer 
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

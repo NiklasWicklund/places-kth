@@ -3,10 +3,14 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 6rem 1rem;
+    padding: 2rem 1rem;
     min-height: 100vh;
     background-color: white;
   }
+
+.title {
+  margin-bottom: 1rem;
+}
 
 .clusterIcon {
   background-color: lightblue;

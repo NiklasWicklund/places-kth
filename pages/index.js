@@ -130,20 +130,28 @@ function Home() {
     </Head>
     <div className={styles.main}>
 
+      <div className={styles.title}>
+        <Typography variant="h4" color="textPrimary">
+          Find a free room at KTH Campus!
+        </Typography>
+      </div>
+
     {fetchingBuildings ? <Loading /> :
       <Container >
         <Filter buildings={buildings} updateFilter={updateFilter} filter={filter} setSelectedDate={setSelectedDate} selectedDate = {selectedDate}/>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} >
           <Grid item xs = {12} >
             <Typography variant="subtitle1" color="textSecondary">
               Showing {filteredRooms.length} rooms
             </Typography>
           </Grid>
-          <Grid item sm = {12} md={8}>
+        </Grid>
+        <Grid container spacing={3} >
+          <Grid item xs = {12} sm = {12} md={8}>
             <Map rooms = {filteredRooms} roomsByBuildings={roomsByBuilding}/>
           </Grid>
-          <Grid item sm = {12} md={4}>
-            <Paper style={{maxHeight: '60vh', overflow: 'auto'}}>
+          <Grid item xs = {12} sm = {12} md={4}>
+            <Paper style={{maxHeight: '50vh', overflow: 'auto'}}>
               <List>
                 {roomsByBuilding?.map((building) => (
                   <li key={building.short}>
