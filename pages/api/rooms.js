@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import roomData from './rooms-campus.json'
 //Import time zone conversion fro date-fns
-import { formatInTimeZone } from 'date-fns-tz';
+import { formatInTimeZone,toDate } from 'date-fns-tz';
 
 export default async function handler(req, res) {
     const {date} = req.query;
@@ -19,6 +19,11 @@ export default async function handler(req, res) {
     console.log("Okey")
     const ISOStart = date + 'T' + '08:00:00'
     const ISOEnd = date + 'T' + '21:00:00'
+
+    const utc = new Date(ISOStart);
+    const test = toDate(utc, { timeZone: 'Europe/Stockholm' })
+    console.log("Using toDate: ",test)
+
     const temp_test = formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T')
     const temp_test_date = new Date(temp_test)
     const startDateTime = new Date(formatInTimeZone(ISOStart, 'Europe/Stockholm', 'yyyy-MM-dd HH:mm:ssXXX').replace(' ', 'T'))
@@ -102,7 +107,7 @@ export default async function handler(req, res) {
         });
 
         // Remove rooms if they aren't in the asked for in the api request.
-        return res.status(200).json([temp_test,temp_test_date,roomData]);
+        return res.status(200).json([roomData,test]);
     } catch (error) {
         // Handle errors that occur during the API request or response parsing
         return res.status(500).json({ error: error.message, startDateTime: stringStart,endDateTime: stringEnd });
