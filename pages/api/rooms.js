@@ -65,9 +65,6 @@ export default async function handler(req, res) {
             const ISOEndB = booking.end
             const startTime = DateTime.fromISO(ISOStartB, { zone: "Europe/Stockholm" }).toJSDate();
             const endTime = DateTime.fromISO(ISOEndB, { zone: "Europe/Stockholm" }).toJSDate();
-            console.log("##########")
-            console.log(ISOStartB, ISOEndB)
-            console.log(startTime, endTime)
             const newTimeSlots = [];
             availableTimeSlots[roomId].forEach(timeSlot => {
             if (timeSlot.end.getTime() <= startTime.getTime() || timeSlot.start.getTime() >= endTime.getTime()) {

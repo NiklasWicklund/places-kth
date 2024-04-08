@@ -89,8 +89,6 @@ function Home() {
         || room.building.includes(filter.query.toLowerCase()))
     }
     result = result.sort((r1,r2) => r1.building > r2.building)
-
-    console.log(result)
     setFilteredRooms(result);
   },[rooms,filter])
 
